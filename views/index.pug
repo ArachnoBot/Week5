@@ -1,0 +1,43 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Recipes
+    script(src="/javascripts/client.js" defer)
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js") 
+  body
+    nav
+      .nav-wrapper
+        ul
+          li
+            h4 Recipes
+          li.right
+            input(type="search", id="search", placeholder="search")
+        
+    .container
+      .col
+        h3#recipeName
+        h4 Instructions:
+        div#instructionList
+        br
+        h4 Ingredients:
+        div#ingredientList
+        
+      .col
+        h4 New recipe name
+        input(type="text", id="name-text")
+        h4 Ingredients 
+        textarea(id="ingredients-text", cols="30", rows="10")
+        br
+        button.btn(type="button", id="add-ingredient") Add ingredient
+        h4 Instructions 
+        textarea(id="instructions-text", cols="30", rows="10")
+        br
+        button.btn(type="button", id="add-instruction") Add instruction
+        br
+        br
+        input(type="file", id="image-input", accept="image/*", multiple)
+        br
+        button.btn(type="submit", id="submit") Submit
