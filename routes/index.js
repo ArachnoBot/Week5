@@ -1,6 +1,11 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 const app = express()
+const multer = require('multer')
+
+app.use(express.urlencoded({extended: true}))
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const mongoose = require("mongoose")
 
@@ -50,9 +55,27 @@ router.post("/recipe/", function(req, res, next) {
   res.send(req.body)
 })
 
-router.post("/images", (req, res, next) => {
-  res.send("yay")
+router.post("/images", upload.any(), (req, res, next) => {
+  addImages(res, req.files)
 })
+
+router.get("/images/:imageId", (req, res, next) => {
+  
+})
+
+async function addImages(res, images) {
+  let imageIds = []
+  for (img of images) {
+    const result = await Image.create({
+      buffer: img.buffer,
+      mimetype: img.mimetype,
+      name: img.originalname,
+      encoding: img.encoding,
+    })
+    imageIds.push(result._id.toString())
+  }
+  res.send({images: imageIds})
+}
 
 async function sendCategories(res) {
   const categories = await Category.find()

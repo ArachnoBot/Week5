@@ -7,7 +7,8 @@ let recipe = {
     name: "",
     instructions: [],
     ingredients: [],
-    categories: []
+    categories: [],
+    images: []
 }
 
 let categoryIds = []
@@ -31,8 +32,8 @@ async function updateCategories() {
         box.type = "checkbox"
         box.id = "checkbox" + i
         span.textContent = data[i].name
-        console.log(data[i])
         categoryIds.push(data[i]._id)
+
         label.appendChild(box)
         label.appendChild(span)
         item.appendChild(label)
@@ -49,8 +50,23 @@ function searchInput() {
 }
 
 function submitRecipe() {
-    recipe.name = document.getElementById("name-text").value
+    const imgInput = document.getElementById("image-input")
+    let imgData = new FormData();
+    
+    for (img of imgInput.files) {
+        imgData.append("images", img)
+    }
 
+    fetch("/images", {
+        method: "POST",
+        body: imgData
+    })
+    .then(res => res.json())
+    .then(data => {
+        recipe.images = data.images
+    })
+
+    recipe.name = document.getElementById("name-text").value
     const boxes = document.querySelectorAll('input[type="checkbox"]');
     for (i in boxes) {
         if (boxes[i].checked == true) {
@@ -65,18 +81,6 @@ function submitRecipe() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(recipe)
-    })
-
-    const imgInput = document.getElementById("image-input")
-    let imgData = new FormData();
-    
-    for (img of imgInput.files) {
-        imgData.append("images", img)
-    }
-
-    fetch("/images", {
-        method: "POST",
-        body: imgData
     })
     
     recipe.name = ""
