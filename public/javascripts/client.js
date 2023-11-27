@@ -74,7 +74,7 @@ function submitRecipe() {
             boxes[i].checked = false
         }
     }
-
+    console.log(recipe)
     fetch("/recipe/", {
         method: "POST",
         headers: {
