@@ -32,7 +32,7 @@ const imageSchema = mongoose.Schema({
 
 const Recipe = mongoose.model("Recipe", recipeSchema)
 const Category = mongoose.model("Category", categorySchema)
-const Image = mongoose.model("Image", imageSchema)
+const Images = mongoose.model("Images", imageSchema)
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -57,7 +57,7 @@ router.post("/images", upload.array("images"), (req, res, next) => {
 })
 
 router.get("/images/:imageId", (req, res, next) => {
-
+  
 })
 
 async function addImages(res, images) {
@@ -69,7 +69,6 @@ async function addImages(res, images) {
       name: img.originalname,
       encoding: img.encoding,
     })
-    
     imageIds.push(result._id)
   }
   res.send({images: imageIds})
