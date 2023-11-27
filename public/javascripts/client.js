@@ -6,10 +6,39 @@ document.getElementById("search").addEventListener("keyup", searchInput)
 let recipe = {
     name: "",
     instructions: [],
-    ingredients: []
+    ingredients: [],
+    categories: []
 }
 
+let categoryIds = []
+
+updateCategories()
 getRecipe("burnt cookies")
+
+async function updateCategories() {
+    const list = document.getElementById("categories")
+    categoryIds = []
+
+    res = await fetch("/categories")
+    data = await res.json()
+
+    for (i in data) {
+        const item = document.createElement("li")
+        const label = document.createElement("label")
+        const box = document.createElement("input")
+        const span = document.createElement("span")
+
+        box.type = "checkbox"
+        box.id = "checkbox" + i
+        span.textContent = data[i].name
+        console.log(data[i])
+        categoryIds.push(data[i]._id)
+        label.appendChild(box)
+        label.appendChild(span)
+        item.appendChild(label)
+        list.appendChild(item)
+    }
+}
 
 function searchInput() {
     searchElement = document.getElementById("search")
@@ -21,6 +50,15 @@ function searchInput() {
 
 function submitRecipe() {
     recipe.name = document.getElementById("name-text").value
+
+    const boxes = document.querySelectorAll('input[type="checkbox"]');
+    for (i in boxes) {
+        if (boxes[i].checked == true) {
+            recipe.categories.push(categoryIds[i])
+            boxes[i].checked = false
+        }
+    }
+
     fetch("/recipe/", {
         method: "POST",
         headers: {
@@ -36,8 +74,6 @@ function submitRecipe() {
         imgData.append("images", img)
     }
 
-    console.log(imgData)
-
     fetch("/images", {
         method: "POST",
         body: imgData
@@ -46,6 +82,7 @@ function submitRecipe() {
     recipe.name = ""
     recipe.instructions = []
     recipe.ingredients = []
+    recipe.categories = []
     document.getElementById("name-text").value = ""
 }
 

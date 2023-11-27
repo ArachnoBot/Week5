@@ -13,17 +13,36 @@ const recipeSchema = mongoose.Schema({
   name: String,
   instructions: Array,
   ingredients: Array,
+  categories: Array,
+  images: Array,
+})
+
+const categorySchema = mongoose.Schema({
+  name: String,
+})
+
+const imageSchema = mongoose.Schema({
+  buffer: Buffer,
+  mimetype: String,
+  name: String,
+  encoding: String,
 })
 
 const Recipe = mongoose.model("Recipe", recipeSchema)
+const Category = mongoose.model("Category", categorySchema)
+const Image = mongoose.model("Image", imageSchema)
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render("index")
-});
+})
 
 router.get('/recipe/:food', function(req, res, next) {
   sendRecipe(res, req.params.food)
+})
+
+router.get('/categories', function(req, res, next) {
+  sendCategories(res)
 });
 
 router.post("/recipe/", function(req, res, next) {
@@ -35,9 +54,13 @@ router.post("/images", (req, res, next) => {
   res.send("yay")
 })
 
+async function sendCategories(res) {
+  const categories = await Category.find()
+  res.send(categories)
+}
+
 async function sendRecipe(res, food) {
   const recipe = await Recipe.find({name: food})
-  console.log(recipe)
   res.send(recipe)
 }
 
