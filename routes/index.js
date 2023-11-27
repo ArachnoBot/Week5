@@ -63,7 +63,7 @@ router.get("/images/:imageId", (req, res, next) => {
 async function addImages(res, images) {
   let imageIds = []
   for (img of images) {
-    const result = await Image.create({
+    const result = await Images.create({
       buffer: img.buffer,
       mimetype: img.mimetype,
       name: img.originalname,
